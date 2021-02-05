@@ -23,6 +23,10 @@ You can change the default `host` and `port` in the `config.ini` file
 python invoker.py
 ```
 
+Tenable Plugin URL and Example URL To Submit
+> https://www.tenable.com/plugins/
+> 
+> https://www.tenable.com/plugins/nessus/126261
 
 ### Usage For CLI
 File in the `scripts` folder
