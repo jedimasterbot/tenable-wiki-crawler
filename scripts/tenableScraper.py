@@ -110,13 +110,15 @@ def main():
     parser = argparse.ArgumentParser(description='GET TENABLE JSON FROM URL(s)')
 
     # Argument is for a multiple urls
-    parser.add_argument('-u', dest='urls', nargs='+', type=str, help='URLs To Crawl', required=True)
+    parser.add_argument('-u', dest='urls', nargs='+', type=str, help='URL(s) to crawl', required=True)
 
     # Argument is used to generate a single json file for each url
-    parser.add_argument('-j', dest='multipleJsonFile', action='store_true', help='Get the Combined JSON File')
+    parser.add_argument('-i', dest='multipleJsonFile', action='store_true',
+                        help='Get the individual JSON file for all URL(s)')
 
     # Argument is used to generate a combined json file for all url
-    parser.add_argument('-i', dest='singleJsonFile', action='store_true', help='Get the individual JSON File')
+    parser.add_argument('-c', dest='singleJsonFile', action='store_true',
+                        help='Get the combined JSON file for all URL(s)')
 
     args = parser.parse_args()
 

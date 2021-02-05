@@ -31,15 +31,15 @@ Tenable Plugin URL and Example URL To Submit
 ### Usage For CLI
 File in the `scripts` folder
 ```
-tenableScraper.py [-h] -u URLS [URLS ...] [-j] [-i]
+tenableScraper.py [-h] -u URLS [URLS ...] [-i] [-c]
 
 GET TENABLE JSON FROM URL(s)
 
 optional arguments:
   -h, --help          show this help message and exit
   -u URLS [URLS ...]  URLs To Crawl
-  -j                  Get the Combined JSON File
-  -i                  Get the individual JSON File
+  -i                  Get the individual JSON file for all URL(s)
+  -c                  Get the combined JSON file for all URL(s)
 ```
 
 ### Contribution
