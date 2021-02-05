@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+    body { margin-top: 7%; justify-content: center; overflow: auto; }
+    pre { display:block; color:white;}
+</style>
+
+<title>URL Result</title>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <pre id="json"></pre>
+    <a id="exportJSON" onclick="exportJson(this);" class="btn" style="display:none"><i class="icon-download"></i> export
+        json</a>
+    <button class="container-fluid btn btn-info" onclick="exportJson(this);">Export JSON</button>
+    <br><br>
+</div>
+<script type="text/javascript">
+        var data = {{result | safe}};
+        document.getElementById("json").innerHTML = JSON.stringify(data, undefined, 2);
+
+        function exportJson(el2) {
+		var el = document.getElementById('exportJSON');
+		var filename = data['Main Info']['Heading']
+        var obj = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, undefined, 2));
+        el.setAttribute("href", "data:"+obj);
+        el.setAttribute("download", filename + ".json");
+        el.click();
+}
+
+
+
+
+</script>
+
+{% endblock %}
+
