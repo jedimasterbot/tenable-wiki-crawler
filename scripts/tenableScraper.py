@@ -125,7 +125,7 @@ def main():
     if args.urls:
         combine = []
         for url in args.urls:
-            if not url.startswith("http") or not url.startswith("https"):
+            if not url.startswith("http") and not url.startswith("https"):
                 url = "https://" + url
 
             url_parsing = urlparse(url)
