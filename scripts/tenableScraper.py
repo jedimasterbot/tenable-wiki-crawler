@@ -10,34 +10,108 @@ import requests
 
 
 class ScrapWithID:
+    """ The function of this class is to parse the tenable nessus url and convert
+    the data in the form of a JSON,
+    :param 'url'
+
+    Returns the JSON
+    """
+
     def __init__(self, completeLink):
         self.completeLink = completeLink
         self.url = requests.get(self.completeLink)
         self.data = self.__start()
 
+    @staticmethod
+    def get_index(right_main_div):
+        """Get the index for the plugin details section present"""
+
+        counter = 0
+
+        # Iterate through the right main div
+        for plugins in right_main_div:
+
+            # Get the plugin details heading
+            plugin_details = plugins.find("h4", {'class': 'border-bottom pb-1'})
+
+            # try, except block
+            try:
+
+                # Compare the text
+                if plugin_details.text == 'Plugin Details':
+                    # return the index where plugin details exists
+                    return counter
+
+            except AttributeError:
+                pass
+
+            # update the counter value
+            counter += 1
+
+    @staticmethod
+    def vpr_info(soup):
+        """Get the VPR score from VPR section card"""
+
+        # Gets all the div with card-body
+        all_cards = soup.find('div', {'class': 'card-body'})
+
+        # Gets the div with card-body
+        vpr_heading = all_cards.find('div', {'class': 'card-body'})
+
+        # Try, except block
+        try:
+
+            # Gets all teh p tags
+            all_p = vpr_heading.find_all('p')
+
+            # Iterate through the tags
+            for x in all_p:
+
+                # Check if strong is present in the p tag
+                if x.find('strong'):
+
+                    # Check if it contains vpr score
+                    if 'vpr score' in str(x.text).lower():
+
+                        # Split the data
+                        data = str(x.text).split(':')
+
+                        # Try except block
+                        try:
+
+                            # return the score
+                            score = data[1]
+                            return score
+
+                        except IndexError:
+                            return ""
+
+        except AttributeError:
+            return ""
+
     def __left_side_page(self):
+        """Parse the left section of the page, which contains the main info synopsis,
+        description and solution"""
+
         # Get the site data
         soup = BeautifulSoup(self.url.content, 'html.parser')
 
-        # Get the VPR Section
-        vpr_info = [x.text for x in soup.find('section') if x.name == 'p']
-
         # Get the main class of left side of the page
-        main_div = soup.find('div', class_="col-md-8")
+        main_div = soup.find_all('div', {'class': "col-md-8"})
 
         # Find th main sections in the main class
-        sections = main_div.find_all('section')
+        sections = main_div[1].find_all('section')
 
         # Get the text of the heading, severity and VPR info
         main_info = {
-            "Heading": soup.find('h1').text,
-            "Severity": (soup.find('span', class_=re.compile("u-m-r-1 badge badge--"))).text,
-            "VPR Info": ("".join(vpr_info))
+            "Heading": soup.find('h2').text,
+            "Severity": str((soup.find('span', class_=re.compile("badge badge-"))).text).upper(),
+            "VPR Score": (self.vpr_info(soup)).strip()
         }
 
         # Extract all the info
-        for x in (sections[1:]):
-            heading = x.find("h3").text
+        for x in sections:
+            heading = x.find("h4").text
             if x.find("span"):
                 data = [y.text for y in x.find_all("span")]
                 main_info.update({str(heading).strip(): str("".join(data)).strip()})
@@ -49,14 +123,19 @@ class ScrapWithID:
         return {"Main Info": main_info}
 
     def __right_side_page(self):
+        """Parse the right section of the page, which contains the plugin details exists"""
+
         # Get the site data
         soup = BeautifulSoup(self.url.content, 'html.parser')
 
         # Get the main class of right side of the page
-        right_main_div = soup.find('div', class_="col-md-4 plugin-single__sidebar")
+        right_main_div = soup.find_all('div', {'class': "col-md-4"})
+
+        # Get the index for the section that has plugin details
+        index = self.get_index(right_main_div)
 
         # Get the tags
-        tag = right_main_div.select("div p")
+        tag = right_main_div[index].select("div p")
 
         # Dictionary to be filled
         plugin_details = {}
