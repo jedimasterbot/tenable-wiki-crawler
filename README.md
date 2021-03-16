@@ -28,6 +28,11 @@ Tenable Plugin URL and Example URL To Submit
 > 
 > https://www.tenable.com/plugins/nessus/126261
 
+![Image of Submission](./images/submission.png)
+
+![Image of Result](./images/result.png)
+
+
 ### Usage For CLI
 File in the `scripts` folder
 ```
