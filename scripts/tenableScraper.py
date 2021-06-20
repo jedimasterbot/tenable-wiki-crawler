@@ -48,47 +48,6 @@ class ScrapWithID:
             # update the counter value
             counter += 1
 
-    @staticmethod
-    def vpr_info(soup):
-        """Get the VPR score from VPR section card"""
-
-        # Gets all the div with card-body
-        all_cards = soup.find('div', {'class': 'card-body'})
-
-        # Gets the div with card-body
-        vpr_heading = all_cards.find('div', {'class': 'card-body'})
-
-        # Try, except block
-        try:
-
-            # Gets all teh p tags
-            all_p = vpr_heading.find_all('p')
-
-            # Iterate through the tags
-            for x in all_p:
-
-                # Check if strong is present in the p tag
-                if x.find('strong'):
-
-                    # Check if it contains vpr score
-                    if 'vpr score' in str(x.text).lower():
-
-                        # Split the data
-                        data = str(x.text).split(':')
-
-                        # Try except block
-                        try:
-
-                            # return the score
-                            score = data[1]
-                            return score
-
-                        except IndexError:
-                            return ""
-
-        except AttributeError:
-            return ""
-
     def __left_side_page(self):
         """Parse the left section of the page, which contains the main info synopsis,
         description and solution"""
@@ -106,7 +65,6 @@ class ScrapWithID:
         main_info = {
             "Heading": soup.find('h2').text,
             "Severity": str((soup.find('span', class_=re.compile("badge badge-"))).text).upper(),
-            "VPR Score": (self.vpr_info(soup)).strip()
         }
 
         # Extract all the info
